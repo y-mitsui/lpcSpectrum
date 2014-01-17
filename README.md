@@ -7,10 +7,13 @@ Calculate voice's spectrum by Linear Predictive Coding (LPC).
 
 
 installation:
-make
-
-
+you require gmake.
+# make
 (mingw4.8 may not be able to compile, because of complex function)
+
+
+
+
 
 
 

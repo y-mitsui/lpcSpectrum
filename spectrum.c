@@ -129,8 +129,8 @@ int main(int argc,char **argv){
 	double *p=freqz(tmp,a,1,lpcOrder+1,FREQ_NUM);
 		
 	for(j=0;j<FREQ_NUM/2;j++){
-		p[j]=20*log(p[j]);
-		if( 2.0 * M_PI * j / (2048) > 0.5) break;
+		p[j]=20*log(p[j]); //対数スペクトルに変換
+		
 		printf("%.5lf\t%.5lf\n", 2.0 * M_PI * j / FREQ_NUM,p[j]);
 	}
 	free(p);
