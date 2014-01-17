@@ -18,17 +18,17 @@ you require gmake.
 
 
 
-usage:
-spectrum [option] [wav file]
--l [frame length]
--p [frame shift]
--d [lpc order]
--n [frame number]
+usage:<br>
+spectrum [option] [wav file]<br>
+-l [frame length]<br>
+-p [frame shift]<br>
+-d [lpc order]<br>
+-n [frame number]<br>
 
 
 
 
-examle:
- spectrum -l 320 -p 320 -d 16 -n 15 a.wav  > result.txt
- gnuplot
+examle:<br>
+ spectrum -l 320 -p 320 -d 16 -n 15 a.wav  > result.txt<br>
+ gnuplot<br>
 > plot "result.txt"
