@@ -19,7 +19,7 @@ spectrum [option] [wav file]
 
 
 
-###examle
+###example
 > spectrum -l 320 -p 320 -d 16 -n 15 a.wav  > result.txt  
 > gnuplot  
 > plot "result.txt"  
