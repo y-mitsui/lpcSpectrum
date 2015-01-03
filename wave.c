@@ -21,7 +21,6 @@ Sound *Read_Wave(char *filename)
 		fprintf(stderr, "Error: %s could not read.", filename);
 		return NULL;
 	}
-	bzero(header_buf,sizeof(header_buf));
 	fread(header_buf, sizeof(unsigned char), 20, fp);		//フォーマットチャンクサイズまでのヘッダ部分を取り込む
 
 	//ファイルがRIFF形式であるか
@@ -31,7 +30,6 @@ Sound *Read_Wave(char *filename)
 		return NULL;
 	}
 	header_buf[4]=0;
-	puts(header_buf);
 	//ファイルがWAVEファイルであるか
 	if(strncmp(header_buf + 8, "WAVE", 4)){
 		fprintf(stderr, "Error: %s is not WAVE.", filename);
@@ -46,7 +44,6 @@ Sound *Read_Wave(char *filename)
 		return NULL;
 	}
 
-	printf("%d\n",sizeof(fmtsize));
 	memcpy(&fmtsize, header_buf + 16, sizeof(fmtsize));
 
 	if((buf = (unsigned char *)calloc(1,sizeof(unsigned char)*fmtsize)) == NULL){
@@ -212,7 +209,7 @@ Sound *Create_Sound(unsigned short channelnum, unsigned int samplingrate, unsign
 		}
 	}else if(channelnum == 1 && bit_per_sample == 16){
 		if((snd->monaural16 = (signed short *)malloc(sizeof(signed short)*snd->datanum)) == NULL){
-			fprintf(stderr, "%p Allocation error4 %d\n",snd->monaural16,sizeof(signed short)*snd->datanum);
+			fprintf(stderr, "Allocation error4 %d\n",sizeof(signed short)*snd->datanum);
 			free(snd);
 			return NULL;
 		}
