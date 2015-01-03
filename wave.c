@@ -9,19 +9,19 @@ Sound *Read_Wave(char *filename)
 	unsigned char header_buf[20];			        //フォーマットチャンクのサイズまでのヘッダ情報を取り込む
 	FILE *fp;
 	Sound *snd;
-	unsigned long datasize;										//波形データのバイト数
+	unsigned int datasize;										//波形データのバイト数
 	unsigned short fmtid;											//fmtのIDを格納する
 	unsigned short channelnum;								//チャンネル数
-	unsigned long samplingrate;								//サンプリング周波数
+	unsigned int samplingrate;								//サンプリング周波数
 	unsigned short bit_per_sample;						//量子化ビット数
 	unsigned char *buf;												//フォーマットチャンクIDから拡張部分までのデータを取り込む
-	unsigned long fmtsize;
+	unsigned int fmtsize;
 
 	if((fp = fopen(filename, "rb")) == NULL){
 		fprintf(stderr, "Error: %s could not read.", filename);
 		return NULL;
 	}
-
+	bzero(header_buf,sizeof(header_buf));
 	fread(header_buf, sizeof(unsigned char), 20, fp);		//フォーマットチャンクサイズまでのヘッダ部分を取り込む
 
 	//ファイルがRIFF形式であるか
@@ -30,7 +30,8 @@ Sound *Read_Wave(char *filename)
 		fclose(fp);
 		return NULL;
 	}
-
+	header_buf[4]=0;
+	puts(header_buf);
 	//ファイルがWAVEファイルであるか
 	if(strncmp(header_buf + 8, "WAVE", 4)){
 		fprintf(stderr, "Error: %s is not WAVE.", filename);
@@ -45,10 +46,11 @@ Sound *Read_Wave(char *filename)
 		return NULL;
 	}
 
+	printf("%d\n",sizeof(fmtsize));
 	memcpy(&fmtsize, header_buf + 16, sizeof(fmtsize));
 
-	if((buf = (unsigned char *)malloc(sizeof(unsigned char)*fmtsize)) == NULL){
-		fprintf(stderr, "Allocation error\n");
+	if((buf = (unsigned char *)calloc(1,sizeof(unsigned char)*fmtsize)) == NULL){
+		fprintf(stderr, "Allocation error1\n");
 		fclose(fp);
 		return NULL;
 	}
@@ -115,11 +117,11 @@ int Write_Wave(char *filename, Sound *snd)
 	int i;
 	FILE *fp;
 	unsigned char header_buf[HEADERSIZE]; //ヘッダを格納する
-	unsigned long fswrh;  //リフヘッダ以外のファイルサイズ
-	unsigned long fmtchunksize; //fmtチャンクのサイズ
-	unsigned long dataspeed;		//データ速度
+	unsigned int fswrh;  //リフヘッダ以外のファイルサイズ
+	unsigned int fmtchunksize; //fmtチャンクのサイズ
+	unsigned int dataspeed;		//データ速度
 	unsigned short blocksize;   //1ブロックあたりのバイト数
-	unsigned long datasize;			//周波数データのバイト数
+	unsigned int datasize;			//周波数データのバイト数
 	unsigned short fmtid;				//フォーマットID
 
 	if((fp = fopen(filename, "wb")) == NULL){
@@ -183,12 +185,12 @@ int Write_Wave(char *filename, Sound *snd)
 	return 0;
 }
 
-Sound *Create_Sound(unsigned short channelnum, unsigned long samplingrate, unsigned short bit_per_sample, unsigned long datasize)
+Sound *Create_Sound(unsigned short channelnum, unsigned int samplingrate, unsigned short bit_per_sample, unsigned int datasize)
 {
 	Sound *snd;
 
 	if((snd = (Sound *)malloc(sizeof(Sound))) == NULL){
-		fprintf(stderr, "Allocation error\n");
+		fprintf(stderr, "Allocation error2\n");
 		return NULL;
 	}
 
@@ -204,25 +206,25 @@ Sound *Create_Sound(unsigned short channelnum, unsigned long samplingrate, unsig
 
 	if(channelnum == 1 && bit_per_sample == 8){
 		if((snd->monaural8 = (unsigned char *)malloc(datasize)) == NULL){
-			fprintf(stderr, "Allocation error\n");
+			fprintf(stderr, "Allocation error3\n");
 			free(snd);
 			return NULL;
 		}
 	}else if(channelnum == 1 && bit_per_sample == 16){
 		if((snd->monaural16 = (signed short *)malloc(sizeof(signed short)*snd->datanum)) == NULL){
-			fprintf(stderr, "Allocation error\n");
+			fprintf(stderr, "%p Allocation error4 %d\n",snd->monaural16,sizeof(signed short)*snd->datanum);
 			free(snd);
 			return NULL;
 		}
 	}else if(channelnum == 2 && bit_per_sample == 8){
 		if((snd->stereo8 = (Soundsample8 *)malloc(sizeof(Soundsample8)*snd->datanum)) == NULL){
-			fprintf(stderr, "Allocation error\n");
+			fprintf(stderr, "Allocation error5\n");
 			free(snd);
 			return NULL;
 		}
 	}else if(channelnum == 2 && bit_per_sample == 16){
 		if((snd->stereo16 = (Soundsample16 *)malloc(sizeof(Soundsample16)*snd->datanum)) == NULL){
-			fprintf(stderr, "Allocation error\n");
+			fprintf(stderr, "Allocation error6\n");
 			free(snd);
 			return NULL;
 		}

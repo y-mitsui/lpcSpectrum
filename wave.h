@@ -15,9 +15,9 @@ typedef struct{
 
 typedef struct{
 	unsigned short channelnum;				//モノラルなら1、ステレオなら2
-	unsigned long samplingrate;				//Hz単位
+	unsigned int samplingrate;				//Hz単位
 	unsigned short bit_per_sample;		//1サンプルあたりのbit数
-	unsigned long datanum;						//モノラルならサンプル数を、ステレオなら左右１サンプルずつの組の数
+	unsigned int datanum;						//モノラルならサンプル数を、ステレオなら左右１サンプルずつの組の数
 
 	unsigned char *monaural8;					//8ビットモノラルのデータならこれを使う
 	signed short *monaural16;						//16ビットモノラルならばこれを使う
@@ -33,7 +33,7 @@ int Write_Wave(char *filename, Sound *snd);
 
 //Soundを作成し、引数の情報に合わせて領域の確保をする。使われる形式以外の領域のポインタはNULL
 //成功すればポインタを、失敗すればNULLを返す
-Sound *Create_Sound(unsigned short channelnum, unsigned long samplingrate, unsigned short bit_per_sample, unsigned long datasize);
+Sound *Create_Sound(unsigned short channelnum, unsigned int samplingrate, unsigned short bit_per_sample, unsigned int datasize);
 
 //Soundを開放する
 void Free_Sound(Sound *snd);
